@@ -14,7 +14,7 @@ namespace ChatarreraApp
         public Form1() {
             InitializeComponent();
 
-            compras = new Compras(1, "Perro", 3.5F, 4.3D, 5);
+            compras = new Compras();
 
             comboBoxMaterial.Items.AddRange(compras.Objetos.ToArray());
             comboBoxMaterial.SelectedIndex = 0;

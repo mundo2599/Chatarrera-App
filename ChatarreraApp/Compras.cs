@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace ChatarreraApp
 {
@@ -9,10 +10,18 @@ namespace ChatarreraApp
 
         public Compras(params object[] objetos) {
             this.objetos = new List<object>();
-            this.objetos.AddRange(objetos);
 
-            cantidad = new decimal[objetos.Length];
-            pagado = new decimal[objetos.Length];
+            foreach(object o in objetos) {
+                if (o is IEnumerable && !(o is string)) {
+                    foreach (var v in o as IEnumerable)
+                        this.objetos.Add(v);
+                } else {
+                    this.objetos.Add(o);
+                }
+            }
+
+            cantidad = new decimal[this.objetos.Count];
+            pagado = new decimal[this.objetos.Count];
         }//fin constructor
 
         public void agregarCompra(object objeto, decimal cantidad, decimal pagado) {
