@@ -1,5 +1,5 @@
 ﻿
-using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,20 +7,31 @@ namespace ChatarreraApp
 {
     public partial class Form1 : Form {
 
-        Compras compras;
         PanelTabla panelTable;
+
+        Compras compras;
+        Configs configs;
+        ManejadorExcel excel;
 
         //constructor
         public Form1() {
             InitializeComponent();
 
-            compras = new Compras();
+            configs = Configs.cargar();
+            if(configs is null)
+                configs = new Configs();
+
+            compras = new Compras(configs.Materiales);
+
+            //excel = new ManejadorExcel(configs);
 
             comboBoxMaterial.Items.AddRange(compras.Objetos.ToArray());
-            comboBoxMaterial.SelectedIndex = 0;
 
-            panelTable = new PanelTabla(compras);
-            panelTabla.Controls.Add(panelTable);
+            panelMaterial.Configs = configs;
+            panelMaterial.Form = this;
+
+            //panelTable = new PanelTabla(compras);
+            //panelTabla.Controls.Add(panelTable);
         }//fin constructor
 
         public int actualizarTabla(int material) {
@@ -28,7 +39,15 @@ namespace ChatarreraApp
             return 0;
         }
 
-//=------------------------Eventos--------------------------------------------------------------------------------------------------------------------------//
+        //agregar material
+        public void agregarMaterial(Material material, List<Material> subMateriales = null) {
+            configs.agregarmaterial(material, subMateriales);
+            comboBoxMaterial.Items.Add(material);
+
+            panelMaterial.agregarMaterial(material, subMateriales);
+        }
+
+        //=------------------------Eventos--------------------------------------------------------------------------------------------------------------------------//
 
         //Agregar entrada
         private void buttonAgregar_Click(object sender, System.EventArgs e) {

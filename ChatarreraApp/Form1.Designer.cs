@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPageMateriales = new System.Windows.Forms.TabPage();
             this.tabPageCompras = new System.Windows.Forms.TabPage();
             this.panelGuardado = new System.Windows.Forms.Panel();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.buttonGuardarCompras = new System.Windows.Forms.Button();
             this.panelTabla = new System.Windows.Forms.Panel();
             this.panelEntradas = new System.Windows.Forms.Panel();
@@ -42,8 +44,9 @@
             this.labelKg = new System.Windows.Forms.Label();
             this.comboBoxMaterial = new System.Windows.Forms.ComboBox();
             this.labelMaterial = new System.Windows.Forms.Label();
-            this.tabPageMateriales = new System.Windows.Forms.TabPage();
+            this.panelMaterial = new ChatarreraApp.PanelMaterial();
             this.tabControl.SuspendLayout();
+            this.tabPageMateriales.SuspendLayout();
             this.tabPageCompras.SuspendLayout();
             this.panelGuardado.SuspendLayout();
             this.panelIntro.SuspendLayout();
@@ -60,6 +63,18 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1066, 558);
             this.tabControl.TabIndex = 0;
+            // 
+            // tabPageMateriales
+            // 
+            this.tabPageMateriales.Controls.Add(this.panelMaterial);
+            this.tabPageMateriales.Location = new System.Drawing.Point(4, 29);
+            this.tabPageMateriales.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPageMateriales.Name = "tabPageMateriales";
+            this.tabPageMateriales.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPageMateriales.Size = new System.Drawing.Size(1058, 525);
+            this.tabPageMateriales.TabIndex = 1;
+            this.tabPageMateriales.Text = "Materiales";
+            this.tabPageMateriales.UseVisualStyleBackColor = true;
             // 
             // tabPageCompras
             // 
@@ -79,15 +94,24 @@
             // panelGuardado
             // 
             this.panelGuardado.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelGuardado.Controls.Add(this.dateTimePicker1);
             this.panelGuardado.Controls.Add(this.buttonGuardarCompras);
             this.panelGuardado.Location = new System.Drawing.Point(755, 4);
             this.panelGuardado.Name = "panelGuardado";
             this.panelGuardado.Size = new System.Drawing.Size(303, 61);
             this.panelGuardado.TabIndex = 3;
             // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker1.Location = new System.Drawing.Point(29, 15);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(127, 26);
+            this.dateTimePicker1.TabIndex = 0;
+            // 
             // buttonGuardarCompras
             // 
-            this.buttonGuardarCompras.Location = new System.Drawing.Point(16, 15);
+            this.buttonGuardarCompras.Location = new System.Drawing.Point(185, 11);
             this.buttonGuardarCompras.Name = "buttonGuardarCompras";
             this.buttonGuardarCompras.Size = new System.Drawing.Size(80, 27);
             this.buttonGuardarCompras.TabIndex = 0;
@@ -197,16 +221,15 @@
             this.labelMaterial.TabIndex = 0;
             this.labelMaterial.Text = "Material:";
             // 
-            // tabPageMateriales
+            // panelMaterial
             // 
-            this.tabPageMateriales.Location = new System.Drawing.Point(4, 29);
-            this.tabPageMateriales.Margin = new System.Windows.Forms.Padding(4);
-            this.tabPageMateriales.Name = "tabPageMateriales";
-            this.tabPageMateriales.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageMateriales.Size = new System.Drawing.Size(1058, 525);
-            this.tabPageMateriales.TabIndex = 1;
-            this.tabPageMateriales.Text = "Materiales";
-            this.tabPageMateriales.UseVisualStyleBackColor = true;
+            this.panelMaterial.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMaterial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.panelMaterial.Location = new System.Drawing.Point(4, 5);
+            this.panelMaterial.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.panelMaterial.Name = "panelMaterial";
+            this.panelMaterial.Size = new System.Drawing.Size(1050, 515);
+            this.panelMaterial.TabIndex = 0;
             // 
             // Form1
             // 
@@ -219,6 +242,7 @@
             this.Name = "Form1";
             this.Text = "Chatarrera";
             this.tabControl.ResumeLayout(false);
+            this.tabPageMateriales.ResumeLayout(false);
             this.tabPageCompras.ResumeLayout(false);
             this.panelGuardado.ResumeLayout(false);
             this.panelIntro.ResumeLayout(false);
@@ -244,6 +268,8 @@
         private System.Windows.Forms.TextBox textBoxKg;
         private System.Windows.Forms.Label labelKg;
         private System.Windows.Forms.ComboBox comboBoxMaterial;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private PanelMaterial panelMaterial;
     }
 }
 
