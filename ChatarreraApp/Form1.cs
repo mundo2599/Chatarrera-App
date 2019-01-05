@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,7 +10,6 @@ namespace ChatarreraApp
 
         PanelTabla panelTable;
 
-        Compras compras;
         Configs configs;
         ManejadorExcel excel;
 
@@ -21,98 +21,89 @@ namespace ChatarreraApp
             if(configs is null)
                 configs = new Configs();
 
-            compras = new Compras(configs.Materiales);
-
-            //excel = new ManejadorExcel(configs);
-
-            comboBoxMaterial.Items.AddRange(compras.Objetos.ToArray());
-
             panelMaterial.Configs = configs;
             panelMaterial.Form = this;
 
-            //panelTable = new PanelTabla(compras);
-            //panelTabla.Controls.Add(panelTable);
+            panelCompras.Form = this;
+
+            panelConfigs1.Configs = configs;
+
+            //agregar materiales
+            foreach (var v in configs.DictionaryMateriales) 
+                agregarMaterial(v.Key, v.Value);
+
+
+            excel = new ManejadorExcel(configs);
+            //Comprobar excel
+
         }//fin constructor
 
-        public int actualizarTabla(int material) {
-            panelTable.actualizarLabel(material);
-            return 0;
+        public void guardarEntradasExcel(Compras compras, DateTime dateTime) {
+            int res = excel.guardarEntrada(compras, dateTime);
+            if (res == 1) {  
+                MessageBox.Show("Los cambios se han guardado con exito", "Exito!");
+            } else if(res == -1){ //si no existe el archivo
+                if(crearArchivoExcel())//intentar crear un nuevo archivo
+                    guardarEntradasExcel(compras, dateTime);
+            }
+            panelConfigs1.Configs = configs;
+        }
+
+        public void guardarSalidasExcel() {
+            //pendiente
+        }
+
+        public void actualizarPreciosExcel() {
+            //pendiente
+        }
+
+        public void actualizarPrecios() {
+            if (excel.actualizarPrecios() == 1) {
+                MessageBox.Show("Los precios han sido cambiados", "Exito!");
+            } else { //si no existe el archivo
+                if (crearArchivoExcel())//intentar crear un nuevo archivo
+                    actualizarPrecios();
+            }
+        }
+
+        //preguntar si se quiere crear un nuevo archivo
+        public bool crearArchivoExcel() {
+            DialogResult result = MessageBox.Show("No existe archivo de Excel\nCree un archivo :c", "Error", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes) {
+                if (excel.crearLibro()) {
+                    return true;
+                } else {
+                    MessageBox.Show("No se completo la creacion del libro de Excel", "Error");
+                    return false;
+                }
+            } else {
+                MessageBox.Show("No se completo la creacion del libro de Excel", "Error");
+                return false;
+            }
         }
 
         //agregar material
         public void agregarMaterial(Material material, List<Material> subMateriales = null) {
-            configs.agregarmaterial(material, subMateriales);
-            comboBoxMaterial.Items.Add(material);
-
             panelMaterial.agregarMaterial(material, subMateriales);
+            panelCompras.agregarMaterial(material);
+        }
+
+        public void agregarSubMateriales(Material material, List<Material> subMateriales) {
+            configs.agregarSubMaterial(material, subMateriales);
+            panelMaterial.recargar();
+        }
+
+        public void agregarNuevoMaterial(Material material, List<Material> subMateriales = null) {
+            configs.agregarmaterial(material, subMateriales);
+            agregarMaterial(material, subMateriales);
         }
 
         //=------------------------Eventos--------------------------------------------------------------------------------------------------------------------------//
 
-        //Agregar entrada
-        private void buttonAgregar_Click(object sender, System.EventArgs e) {
-            int material = comboBoxMaterial.SelectedIndex;
-            decimal kg = 0, pagado = 0;
-
-            try {
-                kg = decimal.Parse(textBoxKg.Text);
-            } catch {
-                MessageBox.Show("Revise los kilogramos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            try {
-                pagado = decimal.Parse(textBoxPagado.Text);
-            } catch {
-                MessageBox.Show("Revise lo pagado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (kg == 0 && pagado == 0) {
-                MessageBox.Show("Sin datos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            compras.agregarCompra(material, kg, pagado);
-
-            panelEntradas.Controls.Add(new PanelFilaDatos(material, kg, pagado, compras, actualizarTabla));
-            actualizarTabla(material);
-
-            textBoxKg.Text = "0";
-            textBoxPagado.Text = "0";
-            comboBoxMaterial.Focus();
-        }//fina de agregar entrada
-
-        //Key event comboBox
-        private void comboBox_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Down)
-                if (!this.comboBoxMaterial.DroppedDown)
-                    this.comboBoxMaterial.DroppedDown = true;
-
-            if (e.KeyCode == Keys.Enter)
-                textBoxKg.Focus();
-        }//fin combo box key event
-
-        private void textBoxKg_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) {
-                textBoxPagado.Focus();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        private void textBoxPagado_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) {
-                buttonAgregar.PerformClick();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-        }
 
 //------------------------------variables usadas por otras clases-------------------------------------------------------------------------//
         public static readonly Font fuenteNegrita = new Font("Arial", 12, FontStyle.Bold);
         public static Font fuente = new Font("Arial", 12, FontStyle.Regular);
         public static readonly int PAD_TOP = 24, PAD_BOT = 0, PAD_LEFT = 10, PAD_RIGHT = 20, TEXT_BOX_WIDHT = 70;
-
     }//fin form
 }//fin namespace

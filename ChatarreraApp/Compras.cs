@@ -14,18 +14,19 @@ namespace ChatarreraApp
             pagado = new List<decimal>();
 
             foreach (object o in objetos) {
-                if (o is IEnumerable && !(o is string)) {
-                    foreach (var v in o as IEnumerable) {
-                        this.objetos.Add(v);
-                        this.cantidad.Add(0.0m);
-                        this.pagado.Add(0.0m);
-                    }
-                } else {
-                    this.objetos.Add(o);
-                    this.cantidad.Add(0.0m);
-                    this.pagado.Add(0.0m);
-                }
+                if (o is IEnumerable && !(o is string))
+                    foreach (var v in o as IEnumerable)
+                        agregarObjeto(v);
+                else 
+                    agregarObjeto(o);
+                
             }
+        }//fin constructor
+
+        public Compras() {
+            this.objetos = new List<object>();
+            cantidad = new List<decimal>();
+            pagado = new List<decimal>();
         }//fin constructor
 
         public void agregarObjeto(object objeto) {
@@ -50,9 +51,17 @@ namespace ChatarreraApp
             this.pagado[indice] -= pagado;
         }
 
-        public List<decimal> Cantidad { get => cantidad;}
-        public List<decimal> Pagado { get => pagado;}
+        public List<decimal> Cantidad { get => cantidad; }
+        public List<decimal> Pagado { get => pagado; }
         public List<object> Objetos { get => objetos; }
+        public decimal TotalPagado {
+            get {
+                decimal total = 0;
+                foreach (decimal d in pagado)
+                    total += d;
+                return total;
+            }
+        }
 
         public override string ToString() {
             string s = "Objeto".PadRight(10);

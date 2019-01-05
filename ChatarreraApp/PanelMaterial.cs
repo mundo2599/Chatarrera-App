@@ -5,8 +5,8 @@ using System.Windows.Forms;
 namespace ChatarreraApp {
     public partial class PanelMaterial : UserControl {
 
-        public Configs configs;
-        public Form1 form;
+        private Configs configs;
+        private Form1 form;
 
         private List<TextBox> textBoxesSubs;
         private List<TextBox> textBoxesPrecios;
@@ -23,7 +23,7 @@ namespace ChatarreraApp {
             //agregar textbox para el precio
             var t = new TextBox() {
                 Size = new System.Drawing.Size(100, 26),
-                Location = new System.Drawing.Point(190, 7 + (30 * textBoxesPrecios.Count)),
+                Location = new System.Drawing.Point(250, 7 + (30 * textBoxesPrecios.Count)),
                 Text = material.Precio.ToString()
             };  //nuevo text box de precio
             this.panelPrecios.Controls.Add(t);
@@ -35,14 +35,25 @@ namespace ChatarreraApp {
                 //agregar textbox para el precio
                 t = new TextBox() {
                     Size = new System.Drawing.Size(100, 26),
-                    Location = new System.Drawing.Point(190, 7 + (30 * textBoxesPrecios.Count)),
+                    Location = new System.Drawing.Point(250, 7 + (30 * textBoxesPrecios.Count)),
                     Text = subMateriales[i++].Precio.ToString()
                 };  //nuevo text box de precio
                 this.panelPrecios.Controls.Add(t);
                 textBoxesPrecios.Add(t);
             }
 
+            treeView1.Height = panelPrecios.DisplayRectangle.Height;
             treeView1.ExpandAll();
+        }
+
+        public void recargar() {
+            foreach(TextBox t in textBoxesPrecios)
+                t.Dispose();
+            textBoxesPrecios.Clear();
+            
+            treeView1.Nodes.Clear();
+            foreach (var v in configs.DictionaryMateriales)
+                agregarMaterial(v.Key, v.Value);
         }
 
         //-------------------------------------Eventos------------------------------------//
@@ -59,46 +70,62 @@ namespace ChatarreraApp {
    
         //agregar material
         private void buttonAgregarMaterial_Click(object sender, EventArgs e) {
-            //verificar que el campo no este vacio
-            //verificar si el material ya existe
+            if(textBoxMaterial.Text.Length == 0) {//si esta vacio el campo
+                System.Media.SystemSounds.Beep.Play();
+                return;
+            }
 
             Material material = new Material(textBoxMaterial.Text);
             List<Material> subMateriales = new List<Material>();
             foreach (TextBox t in textBoxesSubs) {
-                //verificar campo t
-                subMateriales.Add(new Material(t.Text));
+                if (t.Text.Length != 0) {
+                    subMateriales.Add(new Material(t.Text));
+                }
             }
 
+            //verificar si el material ya existe
+            if (configs.buscarMaterial(textBoxMaterial.Text) != null) {//si el amterial ya existe
+                Form.agregarSubMateriales(material, subMateriales);
+            } else {
+                Form.agregarNuevoMaterial(material, subMateriales);
+            }
+
+            //limpiar panel de agregar entrada
             textBoxesSubs.Clear();
             textBoxMaterial.Clear();
             panelSubs.Controls.Clear();
-
-            Form.agregarMaterial(material, subMateriales);
-            //limpiar panel de agregar entrada
         }
 
         //guardar cambios en precios
         private void buttonUpdatePrecios_Click(object sender, EventArgs e) {
             int i = 0;
-            foreach(TreeNode treeC in treeView1.Nodes) {
-                configs.actualizarPrecio(treeC.Text, decimal.Parse(textBoxesPrecios[i++].Text));
-                foreach (TreeNode treeNode in treeC.Nodes) {
-                    configs.actualizarPrecio(treeNode.Text, decimal.Parse(textBoxesPrecios[i++].Text));
-                } 
+            try {
+                foreach (TreeNode treeC in treeView1.Nodes) {
+                    configs.actualizarPrecio(treeC.Text, decimal.Parse(textBoxesPrecios[i++].Text));
+                    foreach (TreeNode treeNode in treeC.Nodes) {
+                        configs.actualizarPrecio(treeNode.Text, decimal.Parse(textBoxesPrecios[i++].Text));
+                    }
+                }
+            } catch {
+                System.Media.SystemSounds.Beep.Play();
+                return;
+                //error al castear a decimal
             }
             Configs.guardar(configs);
+            form.actualizarPrecios();
         }
 
         //----------------------------------------Setters y getters--------------------------------//
         public Configs Configs {
-            set {
+            /*set {
                 configs = value;
                 //limpiar treeview y cargarlo de nuevo de config
                 treeView1.Nodes.Clear();
-                foreach (var v in configs.DictionaryMateriales) {
-                    agregarMaterial(v.Key, v.Value);
-                }
-            }
+                if(configs != null)
+                    foreach (var v in configs.DictionaryMateriales)
+                        agregarMaterial(v.Key, v.Value);
+            }*/
+            set => configs = value;
             get => configs;
         }
 

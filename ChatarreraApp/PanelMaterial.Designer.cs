@@ -59,7 +59,8 @@
             this.treeView1.Location = new System.Drawing.Point(4, 3);
             this.treeView1.Margin = new System.Windows.Forms.Padding(5);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(159, 440);
+            this.treeView1.Scrollable = false;
+            this.treeView1.Size = new System.Drawing.Size(219, 440);
             this.treeView1.TabIndex = 1;
             // 
             // panelAgregarMaterial
@@ -139,7 +140,7 @@
             this.panelPrecios.Controls.Add(this.treeView1);
             this.panelPrecios.Location = new System.Drawing.Point(43, 36);
             this.panelPrecios.Name = "panelPrecios";
-            this.panelPrecios.Size = new System.Drawing.Size(312, 450);
+            this.panelPrecios.Size = new System.Drawing.Size(456, 450);
             this.panelPrecios.TabIndex = 3;
             // 
             // label3
@@ -156,7 +157,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(241, 16);
+            this.label4.Location = new System.Drawing.Point(281, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 20);
             this.label4.TabIndex = 5;
@@ -164,7 +165,7 @@
             // 
             // buttonUpdatePrecios
             // 
-            this.buttonUpdatePrecios.Location = new System.Drawing.Point(378, 460);
+            this.buttonUpdatePrecios.Location = new System.Drawing.Point(505, 460);
             this.buttonUpdatePrecios.Name = "buttonUpdatePrecios";
             this.buttonUpdatePrecios.Size = new System.Drawing.Size(134, 26);
             this.buttonUpdatePrecios.TabIndex = 6;

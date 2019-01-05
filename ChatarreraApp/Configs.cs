@@ -8,15 +8,14 @@ namespace ChatarreraApp {
 
     [Serializable]
     public class Configs {
-        private int lineaSiguienteSalidas,
-                    lineaSiguienteEntrada,
-                    lineaTablaSiguiente;
+        private int lineaActualSalida,
+                    lineaActualEntrada;
 
         private string direccionArchivo;
         private Dictionary<Material, List<Material>> dictionaryMateriales;
 
-        private DateTime dateUltimaEntrada,
-                         dateUltimaSalida;
+        private DateTime dateActualEntrada,
+                         dateActualSalida;
 
         //constructor
         public Configs() {
@@ -24,8 +23,14 @@ namespace ChatarreraApp {
         }
 
         //agrega material que no existe
-        public void agregarmaterial(Material material, List<Material> subMateriales = null) {
+        public void agregarmaterial(Material material, List<Material> subMateriales) {
             dictionaryMateriales.Add(material, subMateriales);
+            guardar(this);
+        }
+
+        //agrega submateriales a un material que ya existe
+        public void agregarSubMaterial(Material material, List<Material> subMateriales) {
+            dictionaryMateriales[buscarMaterial(material.Nombre)].AddRange(subMateriales);
             guardar(this);
         }
 
@@ -34,7 +39,7 @@ namespace ChatarreraApp {
             m.Precio = precio;
         }
 
-        private Material buscarMaterial(string material) {
+        public Material buscarMaterial(string material) {
             foreach(var v in dictionaryMateriales) {
                 if (v.Key.Nombre == material)
                     return v.Key;
@@ -98,7 +103,24 @@ namespace ChatarreraApp {
                 guardar(this);
             }
         }
-    }
+
+        public int LineaActualEntrada {
+            get => lineaActualEntrada;
+            set {
+                lineaActualEntrada = value;
+                guardar(this);
+            }
+        }
+
+        public DateTime DateActualEntrada {
+            get => dateActualEntrada;
+            set {
+                dateActualEntrada = value;
+                guardar(this);
+            }
+        }
+        
+    }//fin compras
 
     [Serializable]
     public class Material {
@@ -108,6 +130,34 @@ namespace ChatarreraApp {
         public Material(string nombre = "", decimal precio = 0m) {
             Nombre = nombre;
             Precio = precio;
+        }
+
+        public override string ToString() {
+            string s = Nombre;
+            //s += ": " + Precio;
+            return s;
+        }
+
+        public static bool operator == (Material a, Material b) {
+            if (a is null && b is null)//iguales
+                return true;
+            else if (a is null || b is null)//distintos
+                return false;
+            else
+                return a.Nombre == b.Nombre;
+        }
+
+        public static bool operator != (Material a, Material b) {
+            if (a is null && b is null)//iguales
+                return false;
+            else if (a is null || b is null)//distintos
+                return true;
+            else
+                return a.Nombre != b.Nombre;
+        }
+
+        public override bool Equals(object obj) {
+            return this == (Material)obj;
         }
 
     }
