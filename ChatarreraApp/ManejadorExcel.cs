@@ -255,12 +255,12 @@ namespace ChatarreraApp {
                 return -2;
             }
 
-            if (date < configs.DateActualEntrada) {//guardando en una fecha anterior
+            if (date.Day < configs.DateActualEntrada.Day) {//guardando en una fecha anterior
                 DialogResult result = MessageBox.Show("Dia de guardado es anterior al ultimo dia guardado", "Precaucion");
                 return - 2;
             }
 
-            if (date > StartOfWeek(configs.DateActualEntrada, DayOfWeek.Sunday).AddDays(7)) {//si es mayor a la semana
+            if (date.DayOfYear > StartOfWeek(configs.DateActualEntrada, DayOfWeek.Sunday).AddDays(7).DayOfYear) {//si es mayor a la semana
                 crearTablaEntradas(date);//nueva semana
             }
 
@@ -268,7 +268,7 @@ namespace ChatarreraApp {
                 crearTablaEntradas(date);   //crear tabla de siguiente semana
             }
 
-            if (date > configs.DateActualEntrada) {//no es el dia que sigue, pero no pasa la semana
+            if (date.DayOfYear > configs.DateActualEntrada.DayOfYear) {//no es el dia que sigue, pero no pasa la semana
                 TimeSpan diferencia = date - configs.DateActualEntrada;
                 configs.LineaActualEntrada += diferencia.Days;
             }
@@ -279,6 +279,7 @@ namespace ChatarreraApp {
             }
 
             configs.LineaActualEntrada++;
+            configs.DateActualEntrada = date.AddDays(1);
 
             cerrarLibro();
 
