@@ -255,7 +255,7 @@ namespace ChatarreraApp {
                 return -2;
             }
 
-            if (date.Day < configs.DateActualEntrada.Day) {//guardando en una fecha anterior
+            if (date.DayOfYear < configs.DateActualEntrada.DayOfYear) {//guardando en una fecha anterior
                 DialogResult result = MessageBox.Show("Dia de guardado es anterior al ultimo dia guardado", "Precaucion");
                 return - 2;
             }
